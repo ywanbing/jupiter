@@ -116,3 +116,7 @@ func (s *Server) Healthz() bool {
 	conn.Close()
 	return true
 }
+
+func (s *Server) Scheme() string {
+	return "http"
+}

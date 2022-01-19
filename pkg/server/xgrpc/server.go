@@ -106,3 +106,7 @@ func (s *Server) Info() *server.ServiceInfo {
 	)
 	return &info
 }
+
+func (s *Server) Scheme() string {
+	return "grpc"
+}

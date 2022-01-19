@@ -65,6 +65,10 @@ func (s *Server) Healthz() bool {
 	return true
 }
 
+func (s *Server) Scheme() string {
+	return "http"
+}
+
 // Server implements server.Server interface.
 func (s *Server) Serve() error {
 	s.Echo.Logger.SetOutput(os.Stdout)

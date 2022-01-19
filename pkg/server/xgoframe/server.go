@@ -19,6 +19,7 @@ import (
 
 	"github.com/douyu/jupiter/pkg/constant"
 	"github.com/douyu/jupiter/pkg/xlog"
+
 	//"github.com/douyu/jupiter/pkg/ecode"
 	//"github.com/douyu/jupiter/pkg/xlog"
 	"github.com/douyu/jupiter/pkg/server"
@@ -84,4 +85,8 @@ func (s *Server) Info() *server.ServiceInfo {
 // TODO(roamerlv):
 func (s *Server) Healthz() bool {
 	return true
+}
+
+func (s *Server) Scheme() string {
+	return "http"
 }
