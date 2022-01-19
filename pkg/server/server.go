@@ -31,17 +31,17 @@ type ConfigInfo struct {
 
 // ServiceInfo represents service info
 type ServiceInfo struct {
-	Name     string               `json:"name"`
-	AppID    string               `json:"appId"`
-	Scheme   string               `json:"scheme"`
-	Address  string               `json:"address"`
-	Weight   float64              `json:"weight"`
-	Enable   bool                 `json:"enable"`
-	Healthy  bool                 `json:"healthy"`
-	Metadata map[string]string    `json:"metadata"`
-	Region   string               `json:"region"`
-	Zone     string               `json:"zone"`
-	Kind     constant.ServiceKind `json:"kind"`
+	Name    string               `json:"name"`
+	AppID   string               `json:"appId"`
+	Scheme  string               `json:"scheme"`
+	Address string               `json:"address"`
+	Weight  float64              `json:"weight"`
+	Enable  bool                 `json:"enable"`
+	Healthy bool                 `json:"healthy"`
+	Labels  map[string]string    `json:"labels"`
+	Region  string               `json:"region"`
+	Zone    string               `json:"zone"`
+	Kind    constant.ServiceKind `json:"kind"`
 	// Deployment 部署组: 不同组的流量隔离
 	// 比如某些服务给内部调用和第三方调用，可以配置不同的deployment,进行流量隔离
 	Deployment string `json:"deployment"`
@@ -96,7 +96,7 @@ func ApplyOptions(options ...Option) ServiceInfo {
 
 func WithMetaData(key, value string) Option {
 	return func(c *ServiceInfo) {
-		c.Metadata[key] = value
+		c.Labels[key] = value
 	}
 }
 
@@ -125,18 +125,18 @@ func defaultServiceInfo() ServiceInfo {
 		Weight:     100,
 		Enable:     true,
 		Healthy:    true,
-		Metadata:   make(map[string]string),
+		Labels:     make(map[string]string),
 		Region:     pkg.AppRegion(),
 		Zone:       pkg.AppZone(),
 		Kind:       0,
 		Deployment: "",
 		Group:      "",
 	}
-	si.Metadata["appMode"] = pkg.AppMode()
-	si.Metadata["appHost"] = pkg.AppHost()
-	si.Metadata["startTime"] = pkg.StartTime()
-	si.Metadata["buildTime"] = pkg.BuildTime()
-	si.Metadata["appVersion"] = pkg.AppVersion()
-	si.Metadata["jupiterVersion"] = pkg.JupiterVersion()
+	si.Labels["appMode"] = pkg.AppMode()
+	si.Labels["appHost"] = pkg.AppHost()
+	si.Labels["startTime"] = pkg.StartTime()
+	si.Labels["buildTime"] = pkg.BuildTime()
+	si.Labels["appVersion"] = pkg.AppVersion()
+	si.Labels["jupiterVersion"] = pkg.JupiterVersion()
 	return si
 }
