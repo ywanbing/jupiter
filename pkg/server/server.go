@@ -70,6 +70,8 @@ type Server interface {
 	GracefulStop(ctx context.Context) error
 	Info() *ServiceInfo
 	Healthz() bool
+	Mux()
+	Scheme() string
 }
 
 // Route ...
