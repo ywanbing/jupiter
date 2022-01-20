@@ -16,7 +16,9 @@ package server
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"net"
 
 	"github.com/douyu/jupiter/pkg"
 	"github.com/douyu/jupiter/pkg/constant"
@@ -141,4 +143,25 @@ func defaultServiceInfo() ServiceInfo {
 	si.Labels["appVersion"] = pkg.AppVersion()
 	si.Labels["jupiterVersion"] = pkg.JupiterVersion()
 	return si
+}
+
+var serverBuilder = map[string]func(net.Listener, *ServiceInfo) Server{}
+
+// RegisterBuilder register server builder
+func RegisterBuilder(schema string, builder func(net.Listener, *ServiceInfo) Server) error {
+	if _, ok := serverBuilder[schema]; ok {
+		return errors.New("duplicate register")
+	}
+
+	serverBuilder[schema] = builder
+	return nil
+}
+
+// Build build a server
+func Build(schema string, listener net.Listener, options *ServiceInfo) (Server, error) {
+	if build, ok := serverBuilder[schema]; ok {
+		return build(listener, options), nil
+	}
+
+	return nil, errors.New("invalid schema " + schema)
 }
