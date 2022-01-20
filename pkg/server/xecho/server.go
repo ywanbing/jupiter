@@ -65,6 +65,10 @@ func (s *Server) Healthz() bool {
 	return true
 }
 
+func (s *Server) Mux() {
+	panic("unimplemented")
+}
+
 func (s *Server) Scheme() string {
 	return "http"
 }
