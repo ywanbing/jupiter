@@ -216,7 +216,7 @@ func (cc *PushConsumer) RegisterBatchMessage(f func(context.Context, ...*primiti
 	return cc
 }
 
-func (cc *PushConsumer) Start() error {
+func (cc *PushConsumer) Start(opt ...consumer.Option) error {
 	var opts = []consumer.Option{
 		consumer.WithGroupName(cc.Group),
 		consumer.WithInstance(cc.InstanceName),
@@ -234,6 +234,11 @@ func (cc *PushConsumer) Start() error {
 	if cc.ConsumerConfig.MessageModel == "BroadCasting" {
 		opts = append(opts, consumer.WithConsumerModel(consumer.BroadCasting))
 	}
+
+	if len(opt) > 0 {
+		opts = append(opts, opt...)
+	}
+
 	// 初始化 PushConsumer
 	client, err := rocketmq.NewPushConsumer(
 		opts...,

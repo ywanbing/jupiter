@@ -67,9 +67,8 @@ func (conf *ProducerConfig) Build() *Producer {
 	return cc
 }
 
-func (pc *Producer) Start() error {
-	// 兼容配置
-	client, err := rocketmq.NewProducer(
+func (pc *Producer) Start(opt ...producer.Option) error {
+	opts := []producer.Option{
 		producer.WithNameServer(pc.Addr),
 		producer.WithRetry(pc.Retry),
 		producer.WithInterceptor(pc.interceptors...),
@@ -78,7 +77,14 @@ func (pc *Producer) Start() error {
 			AccessKey: pc.AccessKey,
 			SecretKey: pc.SecretKey,
 		}),
-	)
+	}
+
+	if len(opt) > 0 {
+		opts = append(opts, opt...)
+	}
+
+	// 兼容配置
+	client, err := rocketmq.NewProducer(opts...)
 	if err != nil {
 		xlog.Panic("create producer",
 			xlog.FieldName(pc.name),
